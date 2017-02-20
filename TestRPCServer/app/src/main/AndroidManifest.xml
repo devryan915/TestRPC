@@ -13,6 +13,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="com.example.ryan.plugin.client" />
             </intent-filter>
         </activity>
         <activity
@@ -21,9 +22,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="com.example.ryan.testrpcserver.SERVERACTIVITY_ACTION" />
-
                 <data android:scheme="ryan" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

@@ -18,11 +18,11 @@ public class ServerAidlService extends Service {
         }
     }
 
-    public ServerAidlService() {
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return new ServerAidlImpl();
+    }
+
+    public ServerAidlService() {
     }
 }

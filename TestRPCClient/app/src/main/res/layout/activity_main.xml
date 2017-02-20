@@ -48,4 +48,14 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="17dp"
         android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="调用其他app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnInvokeApp"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/btnInvokeAIDL"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

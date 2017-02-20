@@ -5,12 +5,11 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
 public class ServerContentProvider extends ContentProvider {
 
-    private static UriMatcher uriMatcher;
+
     private static final String AUTHORITY = "com.example.ryan.testrpcserver.servercontentprovider";
     private static final int SINGLE_WORD = 1;
     private static final int PREFIX_WORDS = 2;
@@ -19,7 +18,7 @@ public class ServerContentProvider extends ContentProvider {
             + "/";
     public static final String DATABASE_FILENAME = "contentprovider.db";
     private SQLiteDatabase database;
-
+    private static UriMatcher uriMatcher;
     static {
         //  添加访问ContentProvider的Uri
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);

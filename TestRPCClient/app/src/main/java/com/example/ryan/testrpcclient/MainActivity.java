@@ -4,18 +4,29 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ResolveInfo;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.ryan.plugin.Common;
 import com.example.ryan.testrpcserver.IServerAidlInterface;
 
+import java.util.List;
+
+import dalvik.system.DexClassLoader;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btnQueryContentProvider).setOnClickListener(this);
         findViewById(R.id.btnSendBroad).setOnClickListener(this);
         findViewById(R.id.btnInvokeAIDL).setOnClickListener(this);
+        findViewById(R.id.btnInvokeApp).setOnClickListener(this);
     }
 
     @Override
@@ -83,6 +95,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
                 }, Service.BIND_AUTO_CREATE);
+                break;
+            }
+            case R.id.btnInvokeApp: {
+                Intent invokeAppIntent = new Intent("com.example.ryan.plugin.client");
+                final List<ResolveInfo> plugins = getPackageManager().queryIntentActivities(invokeAppIntent, 0);
+                ResolveInfo resolveInfo = plugins.get(0);
+                ActivityInfo activityInfo = resolveInfo.activityInfo;
+                String divider = System.getProperty("path.separator");
+                String packageName = activityInfo.packageName;
+                String dexPath = activityInfo.applicationInfo.sourceDir;
+                String dexOutputDir = getApplicationInfo().dataDir;
+                String libPath = activityInfo.applicationInfo.nativeLibraryDir;
+
+                DexClassLoader dexClassLoader = new DexClassLoader(dexPath, dexOutputDir, libPath, this.getClass().getClassLoader());
+                try {
+                    Class<?> clazz = dexClassLoader.loadClass(packageName + ".Plugin");
+                    Common common = (Common) clazz.newInstance();
+                    String msg = common.getMsg("client");
+                    String lastMsg = common.getLastMsg();
+                    Log.d(TAG, msg + " " + lastMsg + " " + common);
+                    Resources res = getPackageManager().getResourcesForApplication(packageName);
+                    String resAppName = res.getString(res.getIdentifier("app_name", "string", packageName));
+                    Log.d(TAG, " resAppName:" + resAppName);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 break;
             }
             default: {
